@@ -1,0 +1,52 @@
+======================================================================
+# OUTPUT OF generate_toc.py
+======================================================================
+TOC graphic written.
+======================================================================
+# OUTPUT OF generate_figure1.py
+======================================================================
+Figure 1 (rebuilt) written.
+======================================================================
+# OUTPUT OF generate_figure2.py
+======================================================================
+Figure 2 (rebuilt) written.
+======================================================================
+# OUTPUT OF generate_figure3.py
+======================================================================
+Figure 3 (rebuilt) written.
+======================================================================
+# OUTPUT OF generate_figure4.py
+======================================================================
+======================================================================
+GROUND TRUTH
+  K_M = 50.0 uM | k_cat = 50 /s | [E]_0 = 4.0 nM (phi=0.8) | V = 0.200 uM/s
+  eps = 6220 /M/cm | path = 1.0 cm | sigma_A = 0.003 AU -> sigma_S = 0.482 uM
+  V/K_M (true) = 4.000 e-3 /s ; k_cat/K_M (true) = 1.000e+06 /M/s
+======================================================================
+
+Design I:  reduced chi^2 = 1.016  (forward adequacy OK)
+  V_hat   = 0.1896 uM/s   (Type A SE 44.9%)
+  KM_hat  = 45.54 uM     (Type A SE 47.7%)
+  K_M 95% profile CI: [12.9 uM, no finite upper bound]  -> NON-IDENTIFIABLE
+  V/K_M 95% profile CI: [3.57, 5.33] e-3 /s (Type A SE 4.0%)
+
+Design II:  reduced chi^2 = 1.133  (forward adequacy OK)
+  V_hat   = 0.1997 uM/s   (Type A SE 0.4%)
+  KM_hat  = 49.51 uM     (Type A SE 1.1%)
+  K_M 95% profile CI: [48.4, 50.5] uM
+  V/K_M 95% profile CI: [3.97, 4.11] e-3 /s (Type A SE 0.7%)
+======================================================================
+SIMULATION-AND-RECOVERY (Nsim = 400)
+  Design I:  K_M median 52.8 uM, 95% spread [14.6, 10000.0] uM, 36/400 runs at the 10 mM cap
+             V/K_M median 3.968 e-3/s, 95% spread [3.494, 5.007] e-3/s
+  Design II:  K_M median 50.0 uM, 95% spread [48.6, 51.3] uM, 0/400 runs at the 10 mM cap
+             V/K_M median 4.000 e-3/s, 95% spread [3.932, 4.075] e-3/s
+======================================================================
+UNCERTAINTY BUDGET (Design II; relative standard uncertainties)
+  Type A (fit): u(V)=0.4%, u(K_M)=1.1%, u(V/K_M)=0.7%
+  Type B: u(eps)/eps=2.0%, u([E]_0)/[E]_0=8.0%
+  u_c(K_M)/K_M       = 2.3%   [Type A (+) eps]
+  u_c(k_cat)/k_cat   = 8.3%   [Type A(V) (+) eps (+) [E]_0]
+  u_c(k_cat/K_M)     = 8.0%   [eps CANCELS; Type A(V/K_M) (+) [E]_0]
+  Fit-only k_cat uncertainty would be 0.4% -> understated by ~22.9x
+======================================================================
