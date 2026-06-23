@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite both the software and the article below."
+title: "Figure- and result-generation code for: From Signals to Measurands"
+type: software
+authors:
+  - family-names: Schnell
+    given-names: Santiago
+    orcid: "https://orcid.org/0000-0002-9477-3914"
+    affiliation: "Department of Mathematics, and Geisel School of Medicine, Dartmouth"
+    email: santiago.schnell@dartmouth.edu
+repository-code: "https://github.com/<your-username>/signals-to-measurands"  # TODO: update
+license: MIT
+version: "1.1.0"
+date-released: "2026-06-23"  # revised submission package
+keywords:
+  - reproducibility
+  - measurement science
+  - enzyme kinetics
+  - identifiability
+  - analytical biochemistry
+preferred-citation:
+  type: article
+  title: "From Signals to Measurands: A Measurement-Science Roadmap for Reproducible Analytical Biochemistry"
+  authors:
+    - family-names: Schnell
+      given-names: Santiago
+      orcid: "https://orcid.org/0000-0002-9477-3914"
+  journal: "ACS Measurement Science Au"
+  year: 2026
+  doi: "10.XXXX/XXXXXXX"   # TODO: add DOI when assigned

@@ -1,0 +1,13 @@
+# Alternative to requirements.txt for users of Anaconda / Miniconda.
+# Create the environment with:
+#     conda env create -f environment.yml
+# Then activate it with:
+#     conda activate signals-to-measurands
+name: signals-to-measurands
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - numpy=2.4.4
+  - scipy=1.17.1
+  - matplotlib=3.10.8

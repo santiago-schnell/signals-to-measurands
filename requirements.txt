@@ -1,0 +1,16 @@
+# Python package requirements for reproducing the figures and numbers in
+# "From Signals to Measurands: A Measurement-Science Roadmap for
+#  Reproducible Analytical Biochemistry" (S. Schnell).
+#
+# These are the exact versions used to produce the deposited figures.
+# Install them all at once with:   pip install -r requirements.txt
+#
+# Note: the numerical results are fixed by the random seed (20240530) and
+# NumPy's PCG64 generator, which is stable across versions, so the numbers
+# reproduce on other recent releases too. Pinning here simply guarantees an
+# identical environment. If a pinned version is unavailable for your system,
+# plain "pip install numpy scipy matplotlib" will also reproduce the numbers.
+
+numpy==2.4.4
+scipy==1.17.1
+matplotlib==3.10.8
