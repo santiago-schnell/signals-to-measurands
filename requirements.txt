@@ -5,12 +5,19 @@
 # These are the exact versions used to produce the deposited figures.
 # Install them all at once with:   pip install -r requirements.txt
 #
-# Note: the numerical results are fixed by the random seed (20240530) and
-# NumPy's PCG64 generator, which is stable across versions, so the numbers
-# reproduce on other recent releases too. Pinning here simply guarantees an
-# identical environment. If a pinned version is unavailable for your system,
-# plain "pip install numpy scipy matplotlib" will also reproduce the numbers.
+# Python 3.11 or newer is required: NumPy 2.4 and SciPy 1.17 do not support
+# Python 3.10.
+#
+# Note on reproducibility: the random seed (20240530) and NumPy's PCG64
+# generator fix the synthetic observations exactly, and PCG64 is stable across
+# NumPy versions. The FITTED values are a separate matter -- where an optimizer
+# stops depends on the SciPy version, on the BLAS/LAPACK build underneath
+# NumPy, and on platform floating-point behaviour -- so bit-identical output is
+# guaranteed only within this pinned environment. On other recent releases the
+# reported quantities should agree well within the tolerances asserted in
+# tests/test_reproduction.py; run `python -m pytest tests` to check.
 
 numpy==2.4.4
 scipy==1.17.1
 matplotlib==3.10.8
+pytest==9.0.2
