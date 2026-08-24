@@ -259,14 +259,6 @@ The Perspective also identifies higher-level open-source tools, including
 PyEnzyme for EnzymeML records and LMFIT for nonlinear estimation and confidence
 exploration. Those packages are not required for this reference implementation.
 
----
-
-## Release and archival record
-
-The software release should be tagged in GitHub and the exact tag archived in
-Zenodo before the final publication record is completed. Add the resulting
-software DOI to `CITATION.cff`, this README, and the manuscript data-availability
-statement when it has been minted.
 
 ---
 
@@ -276,6 +268,7 @@ GitHub reads `CITATION.cff` to provide a **Cite this repository** button. The
 code is released under the MIT License.
 
 Santiago Schnell  
-Department of Mathematics and Geisel School of Medicine at Dartmouth  
+Department of Mathematics, Dartmouth College,
+and Geisel School of Medicine at Dartmouth  
 santiago.schnell@dartmouth.edu  
 ORCID: <https://orcid.org/0000-0002-9477-3914>
