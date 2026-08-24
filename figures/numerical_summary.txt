@@ -1,21 +1,9 @@
 ======================================================================
 # OUTPUT OF generate_toc.py
 ======================================================================
-TOC graphic written.
+TOC graphic written (smallest label 8.5 pt at print size).
 ======================================================================
 # OUTPUT OF generate_figure1.py
-======================================================================
-Figure 1 (rebuilt) written.
-======================================================================
-# OUTPUT OF generate_figure2.py
-======================================================================
-Figure 2 (rebuilt) written.
-======================================================================
-# OUTPUT OF generate_figure3.py
-======================================================================
-Figure 3 (rebuilt) written.
-======================================================================
-# OUTPUT OF generate_figure4.py
 ======================================================================
 ======================================================================
 GROUND TRUTH
@@ -25,28 +13,44 @@ GROUND TRUTH
 ======================================================================
 
 Design I:  reduced chi^2 = 1.016  (forward adequacy OK)
-  V_hat   = 0.1896 uM/s   (Type A SE 44.9%)
-  KM_hat  = 45.54 uM     (Type A SE 47.7%)
-  K_M 95% profile CI: [12.9 uM, no finite upper bound]  -> NON-IDENTIFIABLE
-  V/K_M 95% profile CI: [3.57, 5.33] e-3 /s (Type A SE 4.0%)
+  V_hat   = 0.1673 uM/s   (Type A SE 76.9%)
+  KM_hat  = 39.54 uM     (Type A SE 87.7%)
+  K_M 95% profile CI: [12.8 uM, no finite upper bound]  -> NON-IDENTIFIABLE
+  V/K_M 95% profile CI: [3.57, 5.33] e-3 /s (Type A SE 11.2%)
+  limiting exponential: D_p(infinity) = 1.6773 (< 3.8415; upper profile region remains open)
 
 Design II:  reduced chi^2 = 1.133  (forward adequacy OK)
   V_hat   = 0.1997 uM/s   (Type A SE 0.4%)
-  KM_hat  = 49.51 uM     (Type A SE 1.1%)
+  KM_hat  = 49.52 uM     (Type A SE 1.3%)
   K_M 95% profile CI: [48.4, 50.5] uM
-  V/K_M 95% profile CI: [3.97, 4.11] e-3 /s (Type A SE 0.7%)
+  V/K_M 95% profile CI: [3.97, 4.11] e-3 /s (Type A SE 0.9%)
 ======================================================================
 SIMULATION-AND-RECOVERY (Nsim = 400)
-  Design I:  K_M median 52.8 uM, 95% spread [14.6, 10000.0] uM, 36/400 runs at the 10 mM cap
-             V/K_M median 3.968 e-3/s, 95% spread [3.494, 5.007] e-3/s
+  Design I:  K_M median 55.3 uM, 95% spread [15.0, 10000.0] uM, 65/400 runs at the 10 mM cap
+             V/K_M median 3.966 e-3/s, 95% spread [3.494, 4.977] e-3/s
   Design II:  K_M median 50.0 uM, 95% spread [48.6, 51.3] uM, 0/400 runs at the 10 mM cap
-             V/K_M median 4.000 e-3/s, 95% spread [3.932, 4.075] e-3/s
+             V/K_M median 3.999 e-3/s, 95% spread [3.932, 4.075] e-3/s
 ======================================================================
 UNCERTAINTY BUDGET (Design II; relative standard uncertainties)
-  Type A (fit): u(V)=0.4%, u(K_M)=1.1%, u(V/K_M)=0.7%
+  Type A (fit): u(V)=0.4%, u(K_M)=1.3%, u(V/K_M)=0.9%
   Type B: u(eps)/eps=2.0%, u([E]_0)/[E]_0=8.0%
-  u_c(K_M)/K_M       = 2.3%   [Type A (+) eps]
+  u_c(K_M)/K_M       = 2.4%   [Type A (+) eps]
   u_c(k_cat)/k_cat   = 8.3%   [Type A(V) (+) eps (+) [E]_0]
-  u_c(k_cat/K_M)     = 8.0%   [eps CANCELS; Type A(V/K_M) (+) [E]_0]
-  Fit-only k_cat uncertainty would be 0.4% -> understated by ~22.9x
+  u_c(k_cat/K_M)     = 8.1%   [eps CANCELS; Type A(V/K_M) (+) [E]_0]
+  Fit-only k_cat uncertainty would be 0.4% -> understated by ~19.3x
 ======================================================================
+CALIBRATION-SCALE CHECK (separate [S]_0 input on common scale)
+  d ln V     / d ln eps = -1.0000   (expected -1)
+  d ln K_M   / d ln eps = -1.0000   (expected -1)
+  d ln(V/K_M)/ d ln eps = +0.0000   (expected  0; eps cancels)
+======================================================================
+Deposited data/design_I_observations.csv, data/design_II_observations.csv,
+and current_results.json
+======================================================================
+======================================================================
+# OUTPUT OF generate_figure2.py
+======================================================================
+======================================================================
+# OUTPUT OF generate_figure3.py
+======================================================================
+Figure 3 (rebuilt) written.

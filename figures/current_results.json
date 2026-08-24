@@ -1,0 +1,76 @@
+{
+  "_comment": "Headline values of the worked exemplar. Compare with a relative tolerance of 1e-6 on a matching environment, or 1e-3 across optimizer/BLAS versions. See tests/test_reproduction.py.",
+  "seed": 20240530,
+  "ground_truth": {
+    "KM_M": 5e-05,
+    "V_M_per_s": 2.0000000000000002e-07,
+    "kcat_per_s": 50.0,
+    "E0_M": 4e-09,
+    "sigma_S_M": 4.823151125401929e-07
+  },
+  "designs": {
+    "I": {
+      "S0_M": 1e-05,
+      "n_obs": 50,
+      "t_max_s": 1000.0,
+      "reduced_chi2": 1.0155794411737886,
+      "V_hat_M_per_s": 1.673255011242446e-07,
+      "KM_hat_M": 3.953888751986761e-05,
+      "uA_rel_V": 0.7691034538932421,
+      "uA_rel_KM": 0.8772554108400249,
+      "uA_rel_ratio": 0.11164105460380952,
+      "KM_profile_lo_M": 1.2824267782426778e-05,
+      "KM_profile_hi_M": null,
+      "psi_lo_per_s": 0.0035713709409244372,
+      "psi_hi_per_s": 0.00533354346400099,
+      "Dp_infinity": 1.6772755164507938
+    },
+    "II": {
+      "S0_M": 0.0002,
+      "n_obs": 60,
+      "t_max_s": 1800.0,
+      "reduced_chi2": 1.1329809375775584,
+      "V_hat_M_per_s": 1.9971816516996307e-07,
+      "KM_hat_M": 4.9517764504976585e-05,
+      "uA_rel_V": 0.004276958342232572,
+      "uA_rel_KM": 0.013456976479663102,
+      "uA_rel_ratio": 0.009282848428731087,
+      "KM_profile_lo_M": 4.838912133891214e-05,
+      "KM_profile_hi_M": 5.052301255230126e-05,
+      "psi_lo_per_s": 0.003965276265341847,
+      "psi_hi_per_s": 0.004106006322845638,
+      "Dp_infinity": 32701.531915485117
+    }
+  },
+  "recovery_nsim": 400,
+  "recovery": {
+    "I": {
+      "KM_med": 55.343998809238876,
+      "KM_lo": 15.008355692489685,
+      "KM_hi": 9999.999999999995,
+      "ratio_med": 0.003965549446385346,
+      "ratio_lo": 0.0034935556290040934,
+      "ratio_hi": 0.004977185705036204,
+      "at_cap": 65.0
+    },
+    "II": {
+      "KM_med": 50.01157255360839,
+      "KM_lo": 48.643418288463465,
+      "KM_hi": 51.269021765486016,
+      "ratio_med": 0.003999438740914735,
+      "ratio_lo": 0.003932290949435496,
+      "ratio_hi": 0.0040747210645508,
+      "at_cap": 0.0
+    }
+  },
+  "budget_design_II": {
+    "uc_rel_KM": 0.024105812908388008,
+    "uc_rel_kcat": 0.08257295182238063,
+    "uc_rel_kcat_over_KM": 0.08053676970769809
+  },
+  "epsilon_sensitivity": {
+    "dlnV_dlneps": -1.0000000236523994,
+    "dlnKM_dlneps": -1.0000000749526796,
+    "dlnratio_dlneps": 5.1300280246024954e-08
+  }
+}
