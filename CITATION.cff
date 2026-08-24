@@ -6,7 +6,7 @@ authors:
   - family-names: Schnell
     given-names: Santiago
     orcid: "https://orcid.org/0000-0002-9477-3914"
-    affiliation: "Department of Mathematics, and Geisel School of Medicine, Dartmouth"
+    affiliation: "Department of Mathematics, Dartmouth College, and Geisel School of Medicine, Dartmouth"
     email: santiago.schnell@dartmouth.edu
 repository-code: "https://github.com/santiago-schnell/signals-to-measurands"
 license: MIT
