@@ -1,122 +1,162 @@
 #!/usr/bin/env python3
-"""
-Figure 2 (rebuilt) for:
-"From Signals to Measurands: A Measurement-Science Roadmap for
-Reproducible Analytical Biochemistry"
-
-Fixes the publication-quality issues in the prior version: interior gridlines
-removed (they crossed the curves and added clutter); panel letters masked so no
-curve runs through them; Panel B uses color-coded labels placed directly on the
-two sensitivity curves rather than a legend the blue line crossed; and the
-regime annotations are moved into clear space away from the curves. The
-meaningful shaded regime bands and the K_M reference line are kept.
-
-Outputs: figure2-mm-progress-curves.{eps,pdf,png}
-"""
+"""Generate the signal-to-measurand chain (Figure 2)."""
 from __future__ import annotations
-import numpy as np
+
+from pathlib import Path
+
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 
-plt.rcParams.update({
-    "font.family": "DejaVu Sans",
-    "mathtext.fontset": "dejavusans",
-    "font.size": 16,
-    "axes.titlesize": 16,
-    "axes.labelsize": 17,
-    "xtick.labelsize": 14,
-    "ytick.labelsize": 14,
-    "axes.linewidth": 1.15,
-    "xtick.major.width": 1.05,
-    "ytick.major.width": 1.05,
-})
-DPI = 600
-BLUE = "#1f77b4"
-ORANGE = "#ff7f0e"
-GREEN = "#2ca02c"
-DARK = "#2e333a"
-SHADE = "#e6f1f7"
-ZERO = "#9aa0a8"
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "figures"
+OUT.mkdir(parents=True, exist_ok=True)
+
+DARK = "#343a40"
+TEXT = "#252a31"
+MUTED = "#58616c"
 
 
-def mm_progress_solution(tau, s0):
-    """Solve ds/dtau = -s/(1+s), s(0)=s0 (s=[S]/K_M, tau=Vt/K_M).
-    Implicit solution s + log s = s0 + log s0 - tau; Newton in z=log s."""
-    tau = np.asarray(tau, dtype=float)
-    c = s0 + np.log(s0) - tau
-    z = np.full_like(tau, np.log(max(s0, 1e-12)))
-    for _ in range(100):
-        ez = np.exp(z)
-        step = (ez + z - c) / (ez + 1.0)
-        z -= step
-        if np.nanmax(np.abs(step)) < 1e-12:
-            break
-    return np.exp(z)
+BOXPAD = 0.010  # boxstyle padding: the visible border is this far outside (x, y, w, h)
 
 
-def make_figure2():
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13.33, 6.8), dpi=DPI,
-                                   gridspec_kw={"width_ratios": [1.0, 1.0]})
+def rounded_box(ax, x, y, w, h, facecolor, edgecolor=DARK, lw=2.0):
+    patch = FancyBboxPatch(
+        (x, y), w, h,
+        boxstyle=f"round,pad={BOXPAD},rounding_size=0.020",
+        linewidth=lw, edgecolor=edgecolor, facecolor=facecolor,
+        zorder=2,
+    )
+    ax.add_patch(patch)
+    return patch
 
-    # ---------- Panel A: progress trajectories ----------
-    tau = np.linspace(0, 12, 600)
-    curves = [(0.2, BLUE, r"$[\mathrm{S}]_0/K_M = 0.2$"),
-              (3.0, ORANGE, r"$[\mathrm{S}]_0/K_M = 3$"),
-              (10.0, GREEN, r"$[\mathrm{S}]_0/K_M = 10$")]
-    ax1.axhspan(0.8, 1.2, color=SHADE, zorder=0)
-    for s0, c, lab in curves:
-        ax1.plot(tau, mm_progress_solution(tau, s0), color=c, linewidth=3.0,
-                 label=lab, zorder=3)
-    ax1.axhline(1.0, color=DARK, linestyle="--", linewidth=1.5, zorder=2)
-    ax1.text(11.8, 1.40, r"$[\mathrm{S}] = K_M$", ha="right", va="bottom",
-             fontsize=12.5, color=DARK)
-    ax1.set_xlim(0, 12)
-    ax1.set_ylim(0, 10.5)
-    ax1.set_xlabel(r"scaled time, $Vt/K_M$")
-    ax1.set_ylabel(r"substrate, $[\mathrm{S}]/K_M$")
-    ax1.set_title("A  Trajectories traverse different regimes",
-                  fontsize=15.5, loc="left", fontweight="bold", pad=8)
-    ax1.legend(frameon=False, loc="upper right", fontsize=13.5, handlelength=1.7,
-               borderaxespad=0.8)
 
-    # ---------- Panel B: local sensitivities ----------
-    s = np.logspace(-2, 2, 800)
-    for a, b in [(1e-2, 1e-1), (0.7, 1.5), (10, 1e2)]:
-        ax2.axvspan(a, b, color=SHADE, zorder=0)
-    ax2.axhline(0.0, color=ZERO, linewidth=1.0, zorder=1)
-    ax2.plot(s, np.ones_like(s), color=BLUE, linewidth=3.0, zorder=3)
-    ax2.plot(s, -1.0 / (1.0 + s), color=ORANGE, linewidth=3.0, zorder=3)
-    ax2.set_xscale("log")
-    ax2.set_xlim(1e-2, 1e2)
-    ax2.set_ylim(-1.18, 1.18)
-    ax2.set_xlabel(r"instantaneous $[\mathrm{S}]/K_M$")
-    ax2.set_ylabel("log-sensitivity")
-    ax2.set_title("B  Sensitivities expose parameter confounding",
-                  fontsize=15.5, loc="left", fontweight="bold", pad=8)
+def gap_arrow(ax, x0, y0, x1, y1):
+    """Draw a clearly visible arrow entirely within the gap between boxes."""
+    ax.add_patch(FancyArrowPatch(
+        (x0, y0), (x1, y1),
+        arrowstyle="-|>", mutation_scale=23,
+        linewidth=2.2, color=DARK,
+        shrinkA=0, shrinkB=0, zorder=4,
+        connectionstyle="arc3,rad=0",
+    ))
 
-    # color-coded labels placed directly on the curves
-    ax2.text(0.40, 1.035, r"$\partial\ln v\,/\,\partial\ln V$", color=BLUE,
-             fontsize=14.5, ha="center", va="bottom")
-    ax2.text(7.0, -0.34, r"$\partial\ln v\,/\,\partial\ln K_M$", color=ORANGE,
-             fontsize=14.5, ha="center", va="center")
 
-    # regime annotations, placed clear of both curves
-    ax2.text(0.033, 0.50, "low $[\\mathrm{S}]$:\nonly $V/K_M$", fontsize=12.5, ha="center",
-             va="center", color=DARK, linespacing=1.12)
-    ax2.text(1.02, 0.60, "near $K_M$:\njoint information", fontsize=12.5,
-             ha="center", va="center", color=DARK, linespacing=1.12)
-    ax2.text(33.0, 0.50, "high $[\\mathrm{S}]$:\nmostly $V$", fontsize=12.5, ha="center",
-             va="center", color=DARK, linespacing=1.12)
+# Print-size typography: see generate_figure1.py.  The binding width is the
+# SAVED BOUNDING BOX (~13.2 in here), not FIG_W, and the manuscript sets
+# \linewidth = 6.524 in, so the scale factor is 0.493 and every source font
+# must be at least 8/0.493 = 16.2 pt to clear the journal's 8 pt floor.  The
+# smallest label below is 16.5 pt, i.e. 8.1 pt printed.  Box widths were
+# enlarged to accommodate the larger labels.
+FIG_W, FIG_H = 13.4, 7.2
+SUB = 16.5       # -> 8.6 pt printed
+BOXTITLE = 16.5  # -> 8.6 pt printed (bold)
+CAPTION = 17.0   # -> 8.9 pt printed
+HEAD2 = 20.0     # -> 10.4 pt printed (bold)
+HEAD1 = 24.0     # -> 12.5 pt printed (bold)
 
-    fig.subplots_adjust(left=0.065, right=0.985, bottom=0.135, top=0.90, wspace=0.20)
+
+def build():
+    fig, ax = plt.subplots(figsize=(FIG_W, FIG_H), dpi=300)
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.axis("off")
+
+    ax.text(
+        0.5, 0.945, "From a measured signal to a reported biochemical result",
+        ha="center", va="center", fontsize=HEAD1, fontweight="bold", color=TEXT
+    )
+
+    # Upper measurement chain. The horizontal gaps are deliberately wide enough
+    # to contain the arrows; no connector enters a box.  The outermost box edges
+    # sit at xs[0] - BOXPAD and xs[-1] + w + BOXPAD, so MARGIN must exceed BOXPAD
+    # (plus half the border linewidth) or the first and last borders fall outside
+    # the axes and are clipped.
+    MARGIN = 0.016
+    w, h, y = 0.200, 0.285, 0.560
+    gap = (1.0 - 2 * MARGIN - 4 * w) / 3.0
+    xs = [MARGIN + i * (w + gap) for i in range(4)]
+    assert xs[0] - BOXPAD > 0.0 and xs[-1] + w + BOXPAD < 1.0
+    fills = ["#e8f0f7", "#f7f1e6", "#e8f4ec", "#f6e8e8"]
+    edges = [DARK, DARK, DARK, "#b44f55"]
+    titles = [
+        "Material and assay",
+        "Measured signal",
+        "Measurement model",
+        "Reported result",
+    ]
+    subtitles = [
+        "system,\nconditions, and\nreactive fraction",
+        "raw observations\nand calibration\ndata",
+        "biochemical,\nobservation, and\nstatistical models",
+        "estimate with\nan uncertainty\nstatement",
+    ]
+
+    for x, fc, ec, title, subtitle in zip(xs, fills, edges, titles, subtitles):
+        rounded_box(ax, x, y, w, h, fc, ec, lw=2.4 if ec != DARK else 2.0)
+        ax.text(x + w / 2, y + 0.212, title, ha="center", va="center",
+                fontsize=BOXTITLE, fontweight="bold", color=TEXT, zorder=5)
+        ax.text(x + w / 2, y + 0.098, subtitle, ha="center", va="center",
+                fontsize=SUB, color=MUTED, linespacing=1.16, zorder=5)
+
+    for i in range(3):
+        gap_arrow(ax, xs[i] + w + BOXPAD, y + h / 2,
+                  xs[i + 1] - BOXPAD, y + h / 2)
+
+    ax.text(
+        0.5, 0.525,
+        "The protocol specifies what is done; the models specify how the result is inferred.",
+        ha="center", va="center", fontsize=CAPTION, fontstyle="italic", color=DARK
+    )
+
+    ax.text(
+        0.5, 0.435, "Three checks probe progressively more of the measurement chain",
+        ha="center", va="center", fontsize=HEAD2, fontweight="bold", color=TEXT
+    )
+
+    # Lower reproducibility checks. Arrows sit in separate gaps and are larger
+    # than in the previous version, so they remain visible at print size.
+    y2, h2, w2 = 0.160, 0.200, 0.250
+    x2s = [0.020, 0.375, 0.730]
+    fills2 = ["#eaf1f7", "#dbe8f3", "#c8dbec"]
+    titles2 = ["Repeatability", "Transfer replication",
+               "Independent-method\nreproducibility"]
+    subs2 = ["repeat under closely\nmatched local conditions",
+             "same specified procedure\nin another laboratory",
+             "different route to\nthe same measurand"]
+
+    for x, fc, title, subtitle in zip(x2s, fills2, titles2, subs2):
+        rounded_box(ax, x, y2, w2, h2, fc)
+        ax.text(x + w2 / 2, y2 + 0.133, title, ha="center", va="center",
+                fontsize=BOXTITLE, fontweight="bold", color=TEXT,
+                linespacing=1.04, zorder=5)
+        ax.text(x + w2 / 2, y2 + 0.050, subtitle, ha="center", va="center",
+                fontsize=SUB, color=MUTED, linespacing=1.12, zorder=5)
+
+    for i in range(2):
+        gap_arrow(ax, x2s[i] + w2 + BOXPAD, y2 + h2 / 2,
+                  x2s[i + 1] - BOXPAD, y2 + h2 / 2)
+
+    ax.text(
+        0.5, 0.090,
+        "greater variation in laboratory, method, and assumptions  $\\longrightarrow$  stronger invariance claim",
+        ha="center", va="center", fontsize=CAPTION, color=DARK
+    )
+
+    fig.subplots_adjust(left=0.012, right=0.988, bottom=0.035, top=0.985)
     return fig
 
 
-fig = make_figure2()
-for ext in ("eps", "pdf", "png"):
-    fig.savefig(f"figure2-mm-progress-curves.{ext}",
-                facecolor="white", bbox_inches="tight", pad_inches=0.12,
-                **({"dpi": DPI} if ext == "png" else {}))
-plt.close(fig)
-print("Figure 2 (rebuilt) written.")
+def main() -> None:
+    fig = build()
+    for ext in ("pdf", "png", "eps"):
+        kwargs = {"bbox_inches": "tight", "pad_inches": 0.08, "facecolor": "white"}
+        if ext == "png":
+            kwargs["dpi"] = 300
+        fig.savefig(OUT / f"figure2-measurement-chain.{ext}", **kwargs)
+    plt.close(fig)
+
+
+if __name__ == "__main__":
+    main()

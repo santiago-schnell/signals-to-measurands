@@ -31,6 +31,7 @@ BOX_PINK = "#fbecec"
 PINK_EDGE = "#b5505a"
 
 FIG_W, FIG_H = 3.25, 1.75
+FS_USED: list[float] = []
 
 
 def make_toc():
@@ -47,7 +48,10 @@ def make_toc():
         t.remove()
         return w
 
-    def fit_fs(s, target, start, weight="normal", lo=6.0):
+    # The TOC graphic is drawn at its exact printed size (3.25 x 1.75 in), so
+    # the source point size IS the printed point size.  The auto-fit floor is
+    # therefore set at the journal's 8 pt minimum rather than 6 pt.
+    def fit_fs(s, target, start, weight="normal", lo=8.0):
         fs = start
         while fs > lo and wfrac(s, fs, weight) > target:
             fs -= 0.2
@@ -66,7 +70,7 @@ def make_toc():
     boxes = [
         ("measured\nsignal", BOX_BLUE, DARK, 9.0, "bold"),
         ("calibration\n& inversion", BOX_GREEN, DARK, 9.0, "bold"),
-        (r"$q \pm U(q)$", BOX_PINK, PINK_EDGE, 10.0, "bold"),
+        (r"$\hat q \pm u_c$", BOX_PINK, PINK_EDGE, 10.0, "bold"),
     ]
     hpad = 0.022
     widths = [line_wfrac(lbl, fs, wt) + 2 * hpad for lbl, _, _, fs, wt in boxes]
@@ -93,9 +97,10 @@ def make_toc():
 
     # ---- tagline (auto-fit) ----
     tag = "identifiability  \u2022  uncertainty  \u2022  independent routes"
-    g_fs = fit_fs(tag, 0.94, 8.2)
+    g_fs = fit_fs(tag, 0.94, 8.5)
     ax.text(0.5, 0.145, tag, ha="center", va="center", fontsize=g_fs, color=MUTED)
 
+    FS_USED.extend([t_fs, g_fs] + [fs for _, _, _, fs, _ in boxes])
     return fig
 
 
@@ -103,4 +108,4 @@ fig = make_toc()
 for ext in ("eps", "pdf", "png"):
     fig.savefig(f"toc-graphic.{ext}", dpi=DPI, facecolor="white")
 plt.close(fig)
-print("TOC graphic written.")
+print(f"TOC graphic written (smallest label {min(FS_USED):.1f} pt at print size).")
